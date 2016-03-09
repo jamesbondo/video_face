@@ -53,9 +53,13 @@ import cnn_basical.face_input as cifar10_input
 FLAGS = tf.app.flags.FLAGS
 
 # Basic model parameters.
-tf.app.flags.DEFINE_integer('batch_size2', 256,
+tf.app.flags.DEFINE_integer('batch_size', 64,
+                            """Number of images to process in a batch.""")
+tf.app.flags.DEFINE_integer('batch_size2', 64,
                             """Number of images to process in a batch.""")
 tf.app.flags.DEFINE_string('data_dir2', '/home/aurora/hdd/video/train_images/train/',
+                           """Path to the CIFAR-10 data directory.""")
+tf.app.flags.DEFINE_string('eval_dir2', '/home/aurora/hdd/video/test_images/testrecords/',
                            """Path to the CIFAR-10 data directory.""")
 
 # Global constants describing the CIFAR-10 data set.
@@ -172,7 +176,9 @@ def inputs(eval_data):
   """
   if not FLAGS.data_dir2:
     raise ValueError('Please supply a data_dir')
-  data_dir = os.path.join(FLAGS.data_dir2, 'train.tfrecords')
+  data_dir = os.path.join(FLAGS.eval_dir2, 'test.tfrecords')
+  # data_dir = os.path.join(FLAGS.data_dir2, 'train.tfrecords')
+
   return cifar10_input.inputs(eval_data=eval_data, data_dir=data_dir,
                               batch_size=FLAGS.batch_size2)
 

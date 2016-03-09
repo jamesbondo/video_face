@@ -35,7 +35,8 @@ IMAGE_SIZE = 224
 # Global constants describing the CIFAR-10 data set.
 NUM_CLASSES = 2
 NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 41702
-NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 10000
+# NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 20000
+NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 41702
 
 TRAIN_FILE = '/home/aurora/hdd/video/train_images/train/train.tfrecords'
 
@@ -93,10 +94,10 @@ def read_cifar10(filename_queue):
   record_bytes = tf.decode_raw(features['image_raw'], tf.uint8)
   # depth_major = tf.reshape(record_bytes, [result.depth, result.height, result.width])
   # Convert from [depth, height, width] to [height, width, depth].
-  result.uint8image = record_bytes
+  result.uint8image =  tf.reshape(record_bytes, [result.height, result.width, result.depth])
 
   # The first bytes represent the label, which we convert from uint8->int32.
-  result.label = tf.cast(features['image_raw'], tf.int32)
+  result.label = tf.cast(features['label'], tf.int32)
 
   return result
 
@@ -157,9 +158,11 @@ def distorted_inputs(data_dir, batch_size):
   read_input = read_cifar10(filename_queue)
   reshaped_image = tf.cast(read_input.uint8image, tf.float32)
 
-  session = tf.InteractiveSession()
-  d = session.run(reshaped_image)
-  print(d)
+  # session = tf.InteractiveSession()
+  # tf.train.start_queue_runners(sess=session)
+  # d = session.run(reshaped_image)
+  # print(d.shape)
+  # print(d)
 
 
   height = IMAGE_SIZE
@@ -215,7 +218,7 @@ def inputs(eval_data, data_dir, batch_size):
     filenames = data_dir+'train.tfrecords'
     num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN
   else:
-    filenames = [os.path.join(data_dir, 'test_batch.bin')]
+    filenames = [data_dir]
     num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_EVAL
 
   for f in filenames:
@@ -232,10 +235,10 @@ def inputs(eval_data, data_dir, batch_size):
   height = IMAGE_SIZE
   width = IMAGE_SIZE
 
+  # reshaped_image = tf.image.resize_images(reshaped_image, height, width)
   # Image processing for evaluation.
   # Crop the central [height, width] of the image.
-  resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
-                                                         width, height)
+  resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image, width, height)
 
   # Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_whitening(resized_image)

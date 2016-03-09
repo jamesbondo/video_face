@@ -63,6 +63,7 @@ tf.app.flags.DEFINE_boolean('log_device_placement', False,
 def train():
   """Train CIFAR-10 for a number of steps."""
   with tf.Graph().as_default():
+    tf.Variable(0, trainable=False)
     global_step = tf.Variable(0, trainable=False)
 
     # Get images and labels for CIFAR-10.
@@ -107,7 +108,7 @@ def train():
       assert not np.isnan(loss_value), 'Model diverged with loss = NaN'
 
       if step % 10 == 0:
-        num_examples_per_step = FLAGS.batch_size
+        num_examples_per_step = FLAGS.batch_size2
         examples_per_sec = num_examples_per_step / duration
         sec_per_batch = float(duration)
 

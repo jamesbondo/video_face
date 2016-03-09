@@ -5,13 +5,13 @@ import input_data
 import cv2
 import numpy as np
 
-tf.app.flags.DEFINE_string('directory', '/home/aurora/hdd/video/train_images/train/',
+tf.app.flags.DEFINE_string('directory', '/home/aurora/hdd/video/test_images/testrecords/',
                            'Directory to download data files and write the '
                            'converted result')
-tf.app.flags.DEFINE_string('data_url', '/home/aurora/hdd/video/train_images/nopeople256/',
+tf.app.flags.DEFINE_string('data_url', '/home/aurora/hdd/video/test_images/testnopeople256/',
                            'Directory to download data files and write the '
                            'converted result')
-tf.app.flags.DEFINE_string('data_url2', '/home/aurora/hdd/video/train_images/people256/',
+tf.app.flags.DEFINE_string('data_url2', '/home/aurora/hdd/video/test_images/testhavepeople256/',
                            'Directory to download data files and write the '
                            'converted result')
 
@@ -96,7 +96,8 @@ def main(argv):
   # train_labels = input_data.extract_labels(train_labels_filename)
   # Generate a validation set.
   # Convert to Examples and write the result to TFRecords.
-  convert_to(train_images, train_labels, 'train')
+  # convert_to(train_images, train_labels, 'train')
+  convert_to(train_images, train_labels, 'test')
   # convert_to(validation_images, validation_labels, 'validation')
   # convert_to(test_images, test_labels, 'test')
 if __name__ == '__main__':
